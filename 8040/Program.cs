@@ -13,9 +13,10 @@ namespace _8040
 
 
             Animal a1 = new Dog(); //(Animal)new Dog(); isn't needed
-            //Dog d2 = new Animal(); //can't do this
-            //Dog d2 = (Dog)(new Animal());
+            //Dog d2 = new Animal(); //Dog can't reference Animal, which is higher up
+            Dog d2 = (Dog)(new Animal()); //this *will* work
 
+            
             a1.MakeNoise();
             //a1.Growl(); //a1 doesn't have access to Growl
 
@@ -54,6 +55,10 @@ namespace _8040
             //a2.MakeNoise(3);
             ((Cat)a2).MakeNoise(3);
 
+            a1 = new Animal(d1); //OK, a1 refers to a new Animal
+            //d1 = new Dog(a1); //compiler error - a1 references a dog, but the Dog ctor expects a dog, not an Animal
+            d1 = new Dog((Dog)a1); //fixed
+
             Animal[] a = new Animal[5];
             a[0] = new Animal();
             a[1] = new Cat();
@@ -80,11 +85,30 @@ namespace _8040
             if (a is Dog)
                 ((Dog)a).Growl();
         }
+
+        static int SumLion(Object[] m)
+        {
+            int sum = 0;
+            foreach (Object o in m)
+                if (o is Lion) sum += ((Lion)o).Calc();
+
+            return sum;
+        }
     }
 
     public class Animal
     {
-        string name;
+        protected string name;
+
+        public Animal() 
+        {
+        }
+
+        public virtual int Calc() { return 1; }
+
+        public Animal(Animal other):this()
+        { this.name = other.name; }
+
         public virtual void MakeNoise()
         {
             Console.WriteLine("Animal Noise");
@@ -98,6 +122,11 @@ namespace _8040
 
     public class Dog : Animal
     {
+
+        public Dog() { }
+
+        public Dog(Dog other) { }
+
         public override void MakeNoise() //override
         {
             Console.WriteLine("Woof!");
@@ -113,6 +142,8 @@ namespace _8040
         {
             Console.WriteLine("Jump!");
         }
+
+
     }
 
     public class Cat : Animal
@@ -125,7 +156,11 @@ namespace _8040
 
     public class Lion : Cat
     {
-
+        public override int Calc()
+        {
+            Random rnd = new Random();
+            return rnd.Next(0,5) + base.Calc();
+        }
     }
 
 
