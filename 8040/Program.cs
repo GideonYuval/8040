@@ -10,9 +10,7 @@ namespace _8040
     {
         static void Main(string[] args)
         {
-            Cat c1 = new Cat();
-            c1.MakeNoise();
-            c1.MakeNoise(3);
+
 
             Animal a1 = new Dog(); //(Animal)new Dog(); isn't needed
             //Dog d2 = new Animal(); //can't do this
@@ -33,15 +31,46 @@ namespace _8040
 
             //Dog d1 = a1; //fails
 
+            Dog d1 = new Dog();
+            d1.Jump(); //calls Dog's implementation
+            d1.Jump(3); //Dog inherits Jump(int jumps)
+
             //a1.Jump(); //won't compile, a1 is an Animal, which doesn't implement Jump()
             a1.Jump(3); //calls the Animal method 
             ((Dog)a1).Jump(); //calls Dog's implentation, as we're downcasting a1 
             
             ((Dog)a1).Jump(3); //Dog inherits Jump(int jumps)
 
+            
+            Cat c1 = new Cat();
+            c1.MakeNoise();
+            c1.MakeNoise(3);
 
+            d1.MakeNoise();
+            //d1.MakeNoise(3); //no overload for this method takes one parameter
 
+            Animal a2 = new Cat();
+            a2.MakeNoise();
+            //a2.MakeNoise(3);
+            ((Cat)a2).MakeNoise(3);
 
+            Animal[] a = new Animal[5];
+            a[0] = new Animal();
+            a[1] = new Cat();
+            a[2] = new Dog();
+            a[4] = new Lion();
+            int cats = 0, lions = 0, animals = 0, catsNotLions = 0;
+
+            foreach (Animal animal in a)
+            {
+                if (animal is Lion) lions++;
+                if (animal is Cat) cats++;
+                if (animal is Animal) animals++;
+                if (animal is Cat && !(animal is Lion))
+                    catsNotLions++;
+            }
+
+            Console.WriteLine($"{lions} Lions, {cats} cats, {animals} Animals, {catsNotLions} catsNotLions");
         }
 
         static void DoAnimalStuff(Animal a)
@@ -69,10 +98,11 @@ namespace _8040
 
     public class Dog : Animal
     {
-        public override void MakeNoise()
+        public override void MakeNoise() //override
         {
             Console.WriteLine("Woof!");
         }
+
 
         public void Growl()
         {
@@ -87,10 +117,15 @@ namespace _8040
 
     public class Cat : Animal
     {
-        public void MakeNoise(int times)
+        public void MakeNoise(int times) //overload
         {
-            Console.WriteLine($"Meow {times} times");
+            Console.WriteLine($"Meow {times} times"); 
         }
+    }
+
+    public class Lion : Cat
+    {
+
     }
 
 
