@@ -14,13 +14,14 @@ namespace _8040
 
             Animal a1 = new Dog(); //(Animal)new Dog(); isn't needed
             //Dog d2 = new Animal(); //Dog can't reference Animal, which is higher up
-            Dog d2 = (Dog)(new Animal()); //this *will* work
+            //Dog d2 = (Dog)(new Animal()); //this will compile, but fail at runtime
 
             
             a1.MakeNoise();
             //a1.Growl(); //a1 doesn't have access to Growl
 
-
+            Animal a3 = new Animal();
+            ((Dog)a3).Growl();
 
             //a1 is declared as an Animal, but it actually refers to a Dog object
             //The is operator checks the actual type of the object at runtime, not the reference type.
