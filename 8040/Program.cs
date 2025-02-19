@@ -11,7 +11,6 @@ namespace _8040
         static void Main(string[] args)
         {
 
-
             Animal a1 = new Dog(); //(Animal)new Dog(); isn't needed
             //Dog d2 = new Animal(); //Dog can't reference Animal, which is higher up
             //Dog d2 = (Dog)(new Animal()); //this will compile, but fail at runtime
@@ -21,12 +20,17 @@ namespace _8040
             //a1.Growl(); //a1 doesn't have access to Growl
 
             Animal a3 = new Animal();
-            ((Dog)a3).Growl();
+            //((Dog)a3).Growl(); //runtime exception
 
             //a1 is declared as an Animal, but it actually refers to a Dog object
             //The is operator checks the actual type of the object at runtime, not the reference type.
             Console.WriteLine(a1 is Dog);
             Console.WriteLine(a1.GetType().Name);
+
+            
+            ((Cat)a1).MakeNoise(); //runtime error - a1 isn't a Cat
+            Dog d = new Dog();
+            //((Cat)d).MakeNoise(); //compile error - can't Cat isn't in the path of Dog
 
 
             ((Dog)a1).Growl(); //remember the double ((
@@ -78,6 +82,7 @@ namespace _8040
 
             Console.WriteLine($"{lions} Lions, {cats} cats, {animals} Animals, {catsNotLions} catsNotLions");
         }
+
 
         static void DoAnimalStuff(Animal a)
         {
